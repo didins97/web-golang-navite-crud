@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">Navbar</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/products">Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/categories">Categories</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container mt-3">
+        <h3 class="text-center mb-3">Products</h3>
+        <div class="float-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                Add
+            </button>
+        </div>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th col="col">No</th>
+                    <th col="col">Name</th>
+                    <th col="col">Price</th>
+                    <th col="col">Stock</th>
+                    <th col="col">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{ range $index, $element := .products }}
+                <tr>
+                    <td>{{$index}}</td>
+                    <td>{{$element.Name}}</td>
+                    <td>{{$element.Price}}</td>
+                    <td>{{$element.Stock}}</td>
+                    <td>
+                        <a href="javascript:void()" class="btn btn-sm btn-info text-light show"
+                            data-id="{{$element.Id}}">Show</a>
+                        <a href="javascript:void()" class="btn btn-sm btn-warning text-light edit"
+                            data-id="{{$element.Id}}">Edit</a>
+                        <a href="javascript:void()" class="btn btn-sm btn-danger delete"
+                            data-id="{{$element.Id}}">Delete</a>
+                    </td>
+                </tr>
+                {{ end }}
+            </tbody>
+        </table>
+
+        <!-- Modal Tambah -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <form action="/products/add" method="POST" id="formProduct" enctype="multipart/form-data">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label for="editName" class="form-label">Product Name</label>
+                                <input type="text" class="form-control" id="editName" name="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editPrice" class="form-label">Price</label>
+                                <input type="number" class="form-control" id="editPrice" name="price" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editCategory" class="form-label">Category</label>
+                                <select name="category_id" id="editCategory" class="form-control">
+                                    {{ range $index, $element := .categories }}
+                                    <option value="{{$element.Id}}">{{$element.Name}}</option>
+                                    {{ end }}
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editStock" class="form-label">Stock</label>
+                                <input type="number" class="form-control" id="editStock" name="stock" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="editDesc">Description</label>
+                                <textarea name="desc" id="editDesc" cols="10" rows="10" class="form-control"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="formFile" class="form-label">Image</label>
+                                <input class="form-control" type="file" id="formFile" name="file">
+                              </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="sumbit" class="btn btn-primary">Save changes</button>
+                        </div>
+                </form>
+            </div>
+        </div>
+
+    </div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"
+    integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".edit").click(function () {
+            var id = $(this).data('id');
+            $.ajax({
+                method: "GET",
+                url: `/products/show?id=${id}`,
+                success: function (result) {
+                    console.log(result);
+                    $('#editName').val(result.Name)
+                    $('#editPrice').val(result.Price)
+                    $('#editStock').val(result.Stock)
+                    $('#editDesc').val(result.Desc)
+                    $('#formProduct').attr('action', `/products/edit?id=${id}`)
+                    $("#exampleModal").modal('show')
+                }
+            })
+        })
+
+        $(".delete").click(function () {
+            var id = $(this).data("id");
+            $.ajax({
+                method: "GET",
+                url: `products/delete?id=${id}`,
+                success: function (result) {
+                    location.reload()
+                }
+            })
+        })
+
+    })
+</script>
+
+</html>
